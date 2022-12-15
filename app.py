@@ -4,7 +4,8 @@ from flask_migrate import Migrate
 
 app=Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://test:test@127.0.0.1:5433/test'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://test:test@db/test'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://test:test@127.0.0.1:5433/test'
 
 db=SQLAlchemy(app)
 migrate=Migrate(app, db)
@@ -75,5 +76,5 @@ class Customer(db.Model):
 def hello_world():
     return 'Hello World!'
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5005, debug=True)
+# if __name__ == '__main__':
+#     app.run(host='0.0.0.0', port=5005, debug=True)
