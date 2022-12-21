@@ -1,0 +1,28 @@
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+
+
+app=Flask(__name__)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://test:test@db/test'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://test:test@127.0.0.1:5433/test'
+
+db=SQLAlchemy()
+db.init_app(app)
+migrate=Migrate(app, db)
+
+@app.before_first_request
+def create_table():
+    db.create_all()
+
+    
+from . import views    
+
+    
+  
+
+    
+
+
+

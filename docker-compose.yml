@@ -16,6 +16,8 @@ services:
       - ./app:/usr/src/app/app
       - ./migrations:/usr/src/app/migrations
     restart: always
+    env_file:
+      - ./.env.dev
 
   db:
     environment:
