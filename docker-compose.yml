@@ -1,21 +1,23 @@
 version: '3.6'
 
 services:
-#   api:
-#     build: .
-#     depends_on:
-#       - db
-#     environment:
-#       STAGE: test
-#       SQLALCHEMY_DATABASE_URI: postgresql+psycopg2://test:test@db/test
-#     networks:
-#       - default
-#     ports:
-#       - 5000:5000
-#     volumes:
-#       - ./app:/usr/src/app/app
-#       - ./migrations:/usr/src/app/migrations
-#     restart: always
+  api:
+    build: .
+    depends_on:
+      - db
+    environment:
+      STAGE: test
+      SQLALCHEMY_DATABASE_URI: postgresql+psycopg2://test:test@db/test
+    networks:
+      - default
+    ports:
+      - 5005:5005
+    volumes:
+      - ./app:/usr/src/app/app
+      - ./migrations:/usr/src/app/migrations
+    restart: always
+    env_file:
+      - ./.env.dev
 
   db:
     environment:
