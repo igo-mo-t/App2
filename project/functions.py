@@ -2,39 +2,52 @@ from . import db
 from .models import Room, Rack, Customer
 from flask import request
 import json
+from typing import Any
 
 
 
-def selection_1():
+
+def selection_1() -> dict[str, list[dict[str, Any]]]:
+    """
+    
+    """
     query = db.session.query(Room.id,Room.name).all()
     return {'Room':[{'id':id,'name':name} for id,name in query]}
 
 
-def selection_2():
+
+def selection_2() -> dict[str,list[dict[str, Any]]]:
+    """
+    docstring
+    """
     query = db.session.query(Rack.id,Rack.name,Rack.size,Rack.state,Rack.customer_id,Rack.room_id).all()
     return {'Rack':[{'id':id,'name':name,'size':size,'state':state,'customer_id':customer_id,'room_id':room_id} 
                     for id,name,size,state,customer_id,room_id in query]}
     
     
-def selection_3():
+def selection_3() -> dict[str,list[dict[str, Any]]]:
+    
     query = db.session.query(Customer.id,Customer.name).all()
     return {'Customer':[{'id':id,'name':name} for id,name in query]}
 
 
-def selection_4():
+def selection_4() -> list[dict[str, Any]]:
+    
     query = db.session.query(Rack.id,Rack.name,Customer.name,Room.name)
     query = query.join(Room).join(Customer).filter(Rack.state=='occupied').all()
     return [{'id_rack':rack_id,'rack_name':rack_name,'customer_name':customer_name,'room_name':room_name}
             for rack_id,rack_name,customer_name,room_name in query]
     
     
-def selection_5():
+def selection_5() -> list[dict[str, Any]]:
+    
     query = db.session.query(Room.id,Room.name,db.func.array_agg(Rack.customer_id))
     query = query.outerjoin(Room.racks).filter(Rack.state=='occupied').group_by(Room.id,Room.name).all()
     return [{'id':id,'name':name,'array_customers':array_customers} for id,name,array_customers in query]        
 
 
-def selection_6():
+def selection_6() -> list[dict[str, Any]]:
+    
     subq = db.session.query(Room.id,db.func.max(Rack.size).label('max_size'))
     subq = subq.outerjoin(Room.racks).group_by(Room.id).subquery()
     query = db.session.query(subq.c.id,db.func.min(Rack.id),subq.c.max_size)
@@ -43,18 +56,27 @@ def selection_6():
     return [{'room_id':room_id,'rack_id':rack_id,'rack_size':rack_size} for room_id,rack_id,rack_size in query]        
 
 
-def get_request_args():
-    args = request.args.get('args','0')
-    args = [json.loads(arg) for arg in args.split(',')]
-    k = request.args.get('k',1)
-    k = json.loads(k)
-    reverse = request.args.get('reverse')
-    if reverse:
-        reverse = json.loads(reverse.lower())              # исключение, ошибка если другая строка
-    return {'args':args,'k':k,'reverse':reverse} 
+def get_request_args() -> dict[str, Any]:
+    try:
+        args = request.args.get('args')
+        args = [json.loads(arg) for arg in args.split(',')]
+        k = request.args.get('k','1')
+        k = json.loads(k)
+        reverse = request.args.get('reverse')
+        if reverse:
+            reverse = json.loads(reverse.lower())              # исключение, ошибка если другая строка
+        return {'args':args,'k':k,'reverse':reverse}
+    
+    except (AttributeError):
+        return 'You need to enter args in the request arguments.'
+    
+    except:
+        return 'args must be numbers of type: int,float. Also reverse must be: bool,int or float.'
+        #JSONDecodeError AttributeError если строка  
 
 
-def f_sum(*args,reverse=False):
+def f_sum(*args,reverse: bool | int | None = False) -> dict[str, Any]:
+    
     a=0
     if reverse:
         args = args[::-1]
@@ -63,7 +85,8 @@ def f_sum(*args,reverse=False):
     return {'Arguments':args,'Reverse':reverse,'Sum result':a}
     
 
-def f_difference(*args,reverse=False):
+def f_difference(*args,reverse: bool | int | None = False) -> dict[str, Any]:
+    
     if reverse:
         args = args[::-1]
     a=args[0]
@@ -72,7 +95,8 @@ def f_difference(*args,reverse=False):
     return {'Arguments':args,'Reverse':reverse,'Difference result':a}  
 
 
-def f_product(*args,reverse=False):
+def f_product(*args,reverse: bool | int | None = False) -> dict[str, Any]:
+    
     if reverse:
         args = args[::-1]
     a=args[0]
@@ -81,12 +105,16 @@ def f_product(*args,reverse=False):
     return {'Arguments':args,'Reverse':reverse,'Product result':a}
     
 
-def f_quotient(*args,reverse=False):
-    if reverse:
-        args = args[::-1]
-    a=args[0]
-    for i in args[1:]:
-        a/=i
-    return {'Arguments':args,'Reverse':reverse,'Quotient result':a}
+def f_quotient(*args,reverse: bool | int | None = False) -> dict[str, Any]:
+    try:
+        if reverse:
+            args = args[::-1]
+        a=args[0]
+        for i in args[1:]:
+            a/=i
+        return {'Arguments':args,'Reverse':reverse,'Quotient result':a}
+    
+    except ZeroDivisionError as e:
+        return f'{e}'
  
-     
+    #  ZeroDivisionError: division by zero
