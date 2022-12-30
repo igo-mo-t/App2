@@ -13,10 +13,7 @@ db=SQLAlchemy()
 db.init_app(app)
 migrate=Migrate(app, db)
     
-from . import views    
-
-    
-  
+from . import views     
 
     
 

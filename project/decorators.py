@@ -1,11 +1,14 @@
 
+import sys
+
+
 def info_decor(f):
     """
     Takes a function and adds console output 
     to it when it is called
     """
     def f_new(*args,**kwargs):
-       print('Function',f.__name__ ,'was called.')
+       print('Function',f.__name__ ,'was called.', file=sys.stderr)
        return f(*args,**kwargs)
     return f_new
 

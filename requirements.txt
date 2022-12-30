@@ -44,3 +44,5 @@ tornado==6.2
 traitlets==5.7.0
 wcwidth==0.2.5
 Werkzeug==2.2.2
+pytest
+requests

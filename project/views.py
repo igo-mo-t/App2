@@ -5,6 +5,7 @@ from flask import request
 from typing import Any
 
 
+
 @app.route('/')
 def hello_world() -> str:
     """
@@ -84,14 +85,17 @@ def sum() -> str | dict[str, Any]:
     
     Decorators: argument substitution and information in the console.
     """
-    request_args=get_request_args()
-    if type(request_args) is not dict:
-        return request_args
+    try:
+        request_args=get_request_args()
+    except Exception as e:
+        return str(e)    
     @podmen_arg_decor_k(request_args['k'])
     @info_decor
-    def f(*args,reverse):
+    def f(*args,reverse = False):
+        if request_args['reverse']:
+            reverse = request_args['reverse']
         return f_sum(*args,reverse=reverse)
-    return f(*request_args['args'],reverse=request_args['reverse'])
+    return f(*request_args['args'])
 
 
 
@@ -105,14 +109,17 @@ def difference() -> str | dict[str, Any]:
 
     Decorators: argument substitution and information in the console.
     """
-    request_args=get_request_args()
-    if type(request_args) is not dict:
-        return request_args
+    try:
+        request_args=get_request_args()
+    except Exception as e:
+        return str(e)
     @podmen_arg_decor_k(request_args['k'])
     @info_decor
-    def f(*args,reverse):
+    def f(*args,reverse = False):
+        if request_args['reverse']:
+            reverse = request_args['reverse']
         return f_difference(*args,reverse=reverse)
-    return f(*request_args['args'],reverse=request_args['reverse'])
+    return f(*request_args['args'])
 
 
 
@@ -126,14 +133,17 @@ def product() -> str | dict[str, Any]:
 
     Decorators: argument substitution and information in the console.
     """
-    request_args=get_request_args()
-    if type(request_args) is not dict:
-        return request_args
+    try:
+        request_args=get_request_args()
+    except Exception as e:
+        return str(e)
     @podmen_arg_decor_k(request_args['k'])
     @info_decor
-    def f(*args,reverse):
+    def f(*args,reverse = False):
+        if request_args['reverse']:
+            reverse = request_args['reverse']
         return f_product(*args,reverse=reverse)
-    return f(*request_args['args'],reverse=request_args['reverse'])
+    return f(*request_args['args'])
 
 
 
@@ -147,11 +157,14 @@ def quotient() -> str | dict[str, Any]:
 
     Decorators: argument substitution and information in the console.
     """
-    request_args=get_request_args()
-    if type(request_args) is not dict:
-        return request_args
+    try:
+        request_args=get_request_args()
+    except Exception as e:
+        return str(e)
     @podmen_arg_decor_k(request_args['k'])
     @info_decor
-    def f(*args,reverse):
+    def f(*args,reverse = False):
+        if request_args['reverse']:
+            reverse = request_args['reverse']
         return f_quotient(*args,reverse=reverse)
-    return f(*request_args['args'],reverse=request_args['reverse'])
+    return f(*request_args['args'])

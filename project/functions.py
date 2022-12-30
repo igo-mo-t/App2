@@ -98,11 +98,10 @@ def get_request_args() -> dict[str, Any]:
         return {'args':args,'k':k,'reverse':reverse}
     
     except AttributeError:
-        return 'You need to enter args in the request arguments.'
+        raise AttributeError('You need to enter args in the request arguments.') # type: ignore 
     
     except:
-        return 'args must be numbers of type: int,float. Also reverse must be: bool,int or float.'
-         
+        raise Exception('args must be numbers of type: int,float. Also reverse must be: bool,int or float.') # type: ignore 
 
 
 def f_sum(*args,reverse: bool | int | None = False) -> dict[str, Any]:
@@ -147,7 +146,7 @@ def f_product(*args,reverse: bool | int | None = False) -> dict[str, Any]:
     
 
 
-def f_quotient(*args,reverse: bool | int | None = False) -> dict[str, Any]:
+def f_quotient(*args,reverse: bool | int | None = False) -> dict[str, Any] | str :
     """
     It takes arguments and returns the result of their division.
     Depending on the value of "reverse" changes the order of calculations.
@@ -162,5 +161,4 @@ def f_quotient(*args,reverse: bool | int | None = False) -> dict[str, Any]:
     
     except ZeroDivisionError as e:
         return f'{e}'
- 
- 
+
